@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 1%;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 100%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        body.dark .container {
+            background: #2a2a2a;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 1%;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .dark-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .controls {
+            padding: 1%;
+            background: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        body.dark .controls {
+            background: #333;
+            border-color: #444;
+        }
+        .platform-names {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1%;
+            margin-bottom: 8px;
+        }
+        .platform-names input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        body.dark .platform-names input,
+        body.dark input,
+        body.dark textarea,
+        body.dark select {
+            background: #3a3a3a;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .toggle-view {
+            display: flex;
+            gap: 1%;
+            flex-wrap: wrap;
+        }
+        .toggle-btn, .export-btn {
+            flex: 1;
+            min-width: 48%;
+            padding: 10px;
+            border: none;
+            background: #e0e0e0;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-radius: 4px;
+        }
+        body.dark .toggle-btn,
+        body.dark .export-btn {
+            background: #444;
+            color: #e0e0e0;
+        }
+        .toggle-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        .export-btn {
+            background: #ff9800;
+            color: white;
+            margin-top: 8px;
+        }
+        .version-info {
+            background: #e3f2fd;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        body.dark .version-info {
+            background: #1e3a5f;
+        }
+        .version-btn {
+            padding: 4px 8px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        body.dark .progress-bar {
+            background: #444;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .platform-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1%;
+            padding: 1%;
+        }
+        .platform-container.single {
+            grid-template-columns: 1fr;
+        }
+        .platform {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 1%;
+        }
+        body.dark .platform {
+            background: #333;
+            border-color: #444;
+        }
+        .platform-header {
+            background: #667eea;
+            color: white;
+            padding: 8px 1%;
+            margin: -1% -1% 8px -1%;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .category {
+            margin: 12px 0;
+        }
+        .category-title {
+            background: #9333ea;
+            color: white;
+            padding: 6px 1%;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .step {
+            background: white;
+            margin: 8px 0;
+            padding: 10px 1%;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        body.dark .step {
+            background: #3a3a3a;
+        }
+        .step.completed {
+            opacity: 0.7;
+            border-left-color: #4caf50;
+        }
+        .step.hidden {
+            display: none;
+        }
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .step-num {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .step-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .step-actions button {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .edit-btn {
+            background: #2196f3;
+            color: white;
+        }
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+        .move-btn {
+            background: #ff9800;
+            color: white;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .checkbox-container label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4caf50;
+            cursor: pointer;
+        }
+        .step-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+        body.dark .step-content {
+            color: #e0e0e0;
+        }
+        .step-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+        .step-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+        .prerequisites {
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+            padding: 6px;
+            margin: 6px 0;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+        body.dark .prerequisites {
+            background: #5a4a1a;
+        }
+        .cross-ref {
+            background: #d1ecf1;
+            border-left: 3px solid #17a2b8;
+            padding: 6px;
+            margin: 6px 0;
+            font-size: 11px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        body.dark .cross-ref {
+            background: #1a3a4a;
+        }
+        .cross-ref:hover {
+            background: #bee5eb;
+        }
+        body.dark .cross-ref:hover {
+            background: #2a4a5a;
+        }
+        .notes-warnings {
+            background: #ffebee;
+            border-left: 3px solid #f44336;
+            padding: 6px;
+            margin: 6px 0;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+        body.dark .notes-warnings {
+            background: #4a1a1a;
+        }
+        .add-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .template-section {
+            background: #e8f5e9;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+        }
+        body.dark .template-section {
+            background: #1a3a1a;
+        }
+        .template-btn {
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .share-section {
+            background: #fff9c4;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+        }
+        body.dark .share-section {
+            background: #4a4a1a;
+        }
+        .share-link {
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .copy-btn {
+            width: 100%;
+            padding: 8px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .modal-content {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        body.dark .modal-content {
+            background: #2a2a2a;
+        }
+        .modal h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px 1%;
+            margin: 6px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .file-input {
+            padding: 6px;
+        }
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-top: 8px;
+        }
+        body.dark label {
+            color: #bbb;
+        }
+        .modal-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .modal-btns button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .save-btn {
+            background: #4caf50;
+            color: white;
+        }
+        .cancel-btn {
+            background: #f44336;
+            color: white;
+        }
+        .multi-select {
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 6px 0;
+        }
+        body.dark .multi-select {
+            border-color: #555;
+        }
+        .multi-select label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            margin: 4px 0;
+        }
+        .multi-select input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        @media print {
+            .controls, .add-btn, .step-actions, .dark-toggle {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+            .step {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Two-Way Platform Guide Builder</h1>
+            <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
+        </div>
+        
+        <div class="controls">
+            <div class="platform-names">
+                <input type="text" id="nameA" value="Platform A" onchange="updatePlatformName('A')">
+                <input type="text" id="nameB" value="Platform B" onchange="updatePlatformName('B')">
+            </div>
+            
+            <input type="text" class="search-bar" id="searchBar" placeholder="🔍 Search steps..." oninput="filterSteps()">
+            
+            <div class="toggle-view">
+                <button class="toggle-btn active" onclick="toggleView('dual')">Dual View</button>
+                <button class="toggle-btn" onclick="toggleView('single')">Single View</button>
+                <button class="export-btn" onclick="exportGuide()">📥 Export JSON</button>
+                <button class="export-btn" onclick="document.getElementById('importFile').click()">📤 Import</button>
+                <button class="export-btn" onclick="window.print()">🖨️ Print/PDF</button>
+                <button class="export-btn" onclick="openShareModal()">🔗 Share</button>
+            </div>
+            
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importGuide(event)">
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+            
+            <div class="version-info">
+                <span>Version: <strong id="versionNum">1</strong> | Last saved: <span id="lastSaved">Never</span></span>
+                <button class="version-btn" onclick="saveVersion()">Save Version</button>
+            </div>
+            
+            <div class="template-section">
+                <strong style="font-size: 12px;">Quick Templates:</strong>
+                <button class="template-btn" onclick="loadTemplate('mobile')">📱 Mobile App (iOS/Android)</button>
+                <button class="template-btn" onclick="loadTemplate('web')">🌐 Web App (Frontend/Backend)</button>
+                <button class="template-btn" onclick="loadTemplate('api')">⚙️ API Integration (Client/Server)</button>
+            </div>
+        </div>
+        
+        <div class="platform-container" id="platformContainer">
+            <div class="platform">
+                <div class="platform-header" id="headerA">Platform A</div>
+                <div id="platformA"></div>
+                <button class="add-btn" onclick="openModal('A')">+ Add Step</button>
+            </div>
+            
+            <div class="platform">
+                <div class="platform-header" id="headerB">Platform B</div>
+                <div id="platformB"></div>
+                <button class="add-btn" onclick="openModal('B')">+ Add Step</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add Instruction Step</h2>
+            
+            <label>Category</label>
+            <select id="stepCategory">
+                <option value="Setup">Setup</option>
+                <option value="Authentication">Authentication</option>
+                <option value="Configuration">Configuration</option>
+                <option value="Integration">Integration</option>
+                <option value="Testing">Testing</option>
+                <option value="Deployment">Deployment</option>
+            </select>
+            
+            <label>Step Title</label>
+            <input type="text" id="stepTitle" placeholder="e.g., Install Dependencies">
+            
+            <label>Description</label>
+            <textarea id="stepDesc" placeholder="Detailed instructions..."></textarea>
+            
+            <label>Code Snippet (optional)</label>
+            <textarea id="stepCode" placeholder="code here..."></textarea>
+            
+            <label>Screenshot/Image (optional)</label>
+            <input type="file" id="stepImage" accept="image/*" class="file-input">
+            
+            <label>Notes/Warnings (optional)</label>
+            <textarea id="stepNotes" placeholder="Important notes or warnings..."></textarea>
+            
+            <label>Prerequisites (select steps that must be completed first)</label>
+            <div class="multi-select" id="prerequisitesList"></div>
+            
+            <label>Cross-Reference (link to related step in other platform)</label>
+            <div class="multi-select" id="crossRefList"></div>
+            
+            <div class="modal-btns">
+                <button class="save-btn" onclick="saveStep()">Save</button>
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <h2>Share Guide</h2>
+            <p style="font-size: 12px; margin-bottom: 10px;">Copy this link to share your guide:</p>
+            <input type="text" class="share-link" id="shareLink" readonly>
+            <button class="copy-btn" onclick="copyShareLink()">📋 Copy Link</button>
+            <div class="modal-btns" style="margin-top: 10px;">
+                <button class="cancel-btn" onclick="closeShareModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPlatform = '';
+        let editingIndex = null;
+        let version = 1;
+        const platformNames = { A: 'Platform A', B: 'Platform B' };
+        const steps = { A: [], B: [] };
+        const versionHistory = [];
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const btn = document.querySelector('.dark-toggle');
+            btn.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
+        }
+
+        function updatePlatformName(platform) {
+            const name = document.getElementById('name' + platform).value;
+            platformNames[platform] = name;
+            document.getElementById('header' + platform).textContent = name;
+            renderSteps('A');
+            renderSteps('B');
+        }
+
+        function toggleView(view) {
+            const container = document.getElementById('platformContainer');
+            const btns = document.querySelectorAll('.toggle-btn');
+            
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            container.classList.toggle('single', view === 'single');
+        }
+
+        function updateProgress() {
+            const totalA = steps.A.length;
+            const totalB = steps.B.length;
+            const completedA = steps.A.filter(s => s.completed).length;
+            const completedB = steps.B.filter(s => s.completed).length;
+            
+            const total = totalA + totalB;
+            const completed = completedA + completedB;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            const fill = document.getElementById('progressFill');
+            fill.style.width = percentage + '%';
+            fill.textContent = `${percentage}% Complete (${completed}/${total})`;
+        }
+
+        function filterSteps() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            
+            ['A', 'B'].forEach(platform => {
+                steps[platform].forEach((step, idx) => {
+                    const el = document.getElementById(`step-${platform}-${idx}`);
+                    if (el) {
+                        const match = step.title.toLowerCase().includes(query) ||
+                                    step.desc.toLowerCase().includes(query) ||
+                                    step.category.toLowerCase().includes(query) ||
+                                    (step.code && step.code.toLowerCase().includes(query));
+                        
+                        el.classList.toggle('hidden', !match && query !== '');
+                    }
+                });
+            });
+        }
+
+        function openModal(platform, editIdx = null) {
+            currentPlatform = platform;
+            editingIndex = editIdx;
+            document.getElementById('modal').style.display = 'block';
+            
+            if (editIdx !== null) {
+                const step = steps[platform][editIdx];
+                document.getElementById('modalTitle').textContent = 'Edit Instruction Step';
+                document.getElementById('stepTitle').value = step.title;
+                document.getElementById('stepDesc').value = step.desc;
+                document.getElementById('stepCode').value = step.code || '';
+                document.getElementById('stepNotes').value = step.notes || '';
+                document.getElementById('stepCategory').value = step.category;
+            } else {
+                document.getElementById('modalTitle').textContent = 'Add Instruction Step';
+                document.getElementById('stepTitle').value = '';
+                document.getElementById('stepDesc').value = '';
+                document.getElementById('stepCode').value = '';
+                document.getElementById('stepNotes').value = '';
+                document.getElementById('stepImage').value = '';
+                document.getElementById('stepCategory').value = 'Setup';
+            }
+            
+            populatePrerequisites();
+            populateCrossRefs();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            editingIndex = null;
+        }
+
+        function openShareModal() {
+            const data = {
+                platformNames,
+                steps,
+                version
+            };
+            const encoded = btoa(JSON.stringify(data));
+            const url = window.location.href.split('?')[0] + '?guide=' + encoded;
+            
+            document.getElementById('shareLink').value = url;
+            document.getElementById('shareModal').style.display = 'block';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        function copyShareLink() {
+            const input = document.getElementById('shareLink');
+            input.select();
+            document.execCommand('copy');
+            alert('Link copied to clipboard!');
+        }
+
+        function loadTemplate(type) {
+            if (!confirm('Load template? This will replace current data.')) return;
+            
+            const templates = {
+                mobile: {
+                    names: { A: 'iOS', B: 'Android' },
+                    steps: {
+                        A: [
+                            { title: 'Setup Xcode', desc: 'Install and configure Xcode IDE', category: 'Setup', code: 'xcode-select --install', notes: 'Requires macOS', prerequisites: [], crossRefs: [0], completed: false },
+                            { title: 'Create Project', desc: 'Create new iOS project in Xcode', category: 'Setup', code: '', notes: '', prerequisites: [0], crossRefs: [1], completed: false }
+                        ],
+                        B: [
+                            { title: 'Setup Android Studio', desc: 'Install and configure Android Studio', category: 'Setup', code: '', notes: 'Requires JDK 11+', prerequisites: [], crossRefs: [0], completed: false },
+                            { title: 'Create Project', desc: 'Create new Android project', category: 'Setup', code: '', notes: '', prerequisites: [0], crossRefs: [1], completed: false }
+                        ]
+                    }
+                },
+                web: {
+                    names: { A: 'Frontend', B: 'Backend' },
+                    steps: {
+                        A: [
+                            { title: 'Setup React', desc: 'Initialize React application', category: 'Setup', code: 'npx create-react-app my-app', notes: '', prerequisites: [], crossRefs: [0], completed: false },
+                            { title: 'Install Dependencies', desc: 'Add required packages', category: 'Setup', code: 'npm install axios react-router-dom', notes: '', prerequisites: [0], crossRefs: [], completed: false }
+                        ],
+                        B: [
+                            { title: 'Setup Node.js', desc: 'Initialize Node.js project', category: 'Setup', code: 'npm init -y', notes: 'Requires Node.js 16+', prerequisites: [], crossRefs: [0], completed: false },
+                            { title: 'Install Express', desc: 'Add Express framework', category: 'Setup', code: 'npm install express', notes: '', prerequisites: [0], crossRefs: [], completed: false }
+                        ]
+                    }
+                },
+                api: {
+                    names: { A: 'Client', B: 'Server' },
+                    steps: {
+                        A: [
+                            { title: 'Setup API Client', desc: 'Configure HTTP client library', category: 'Setup', code: 'npm install axios', notes: '', prerequisites: [], crossRefs: [0], completed: false },
+                            { title: 'Authentication', desc: 'Implement API authentication', category: 'Authentication', code: 'const token = await getAuthToken();', notes: 'Store tokens securely', prerequisites: [0], crossRefs: [1], completed: false }
+                        ],
+                        B: [
+                            { title: 'Setup API Server', desc: 'Initialize REST API server', category: 'Setup', code: 'npm install express cors', notes: '', prerequisites: [], crossRefs: [0], completed: false },
+                            { title: 'Setup Auth Middleware', desc: 'Create authentication middleware', category: 'Authentication', code: 'app.use(authMiddleware);', notes: 'Use JWT tokens', prerequisites: [0], crossRefs: [1], completed: false }
+                        ]
+                    }
+                }
+            };
+            
+            const template = templates[type];
+            platformNames.A = template.names.A;
+            platformNames.B = template.names.B;
+            steps.A = template.steps.A;
+            steps.B = template.steps.B;
+            
+            document.getElementById('nameA').value = platformNames.A;
+            document.getElementById('nameB').value = platformNames.B;
+            updatePlatformName('A');
+            updatePlatformName('B');
+            renderSteps('A');
+            renderSteps('B');
+            updateProgress();
+        }
+
+        function populatePrerequisites() {
+            const list = document.getElementById('prerequisitesList');
+            list.innerHTML = '';
+            
+            steps[currentPlatform].forEach((step, idx) => {
+                if (editingIndex !== idx) {
+                    const label = document.createElement('label');
+                    const checked = editingIndex !== null && 
+                                  steps[currentPlatform][editingIndex].prerequisites?.includes(idx);
+                    label.innerHTML = `<input type="checkbox" value="${idx}" ${checked ? 'checked' : ''}> ${step.category}: ${step.title}`;
+                    list.appendChild(label);
+                }
+            });
+        }
+
+        function populateCrossRefs() {
+            const list = document.getElementById('crossRefList');
+            list.innerHTML = '';
+            
+            const otherPlatform = currentPlatform === 'A' ? 'B' : 'A';
+            steps[otherPlatform].forEach((step, idx) => {
+                const label = document.createElement('label');
+                const checked = editingIndex !== null && 
+                              steps[currentPlatform][editingIndex].crossRefs?.includes(idx);
+                label.innerHTML = `<input type="checkbox" value="${idx}" ${checked ? 'checked' : ''}> ${step.category}: ${step.title}`;
+                list.appendChild(label);
+            });
+        }
+
+        async function saveStep() {
+            const title = document.getElementById('stepTitle').value;
+            const desc = document.getElementById('stepDesc').value;
+            const code = document.getElementById('stepCode').value;
+            const notes = document.getElementById('stepNotes').value;
+            const category = document.getElementById('stepCategory').value;
+            const imageFile = document.getElementById('stepImage').files[0];
+            
+            if (!title || !desc) {
+                alert('Title and description required');
+                return;
+            }
+            
+            const prerequisites = Array.from(document.querySelectorAll('#prerequisitesList input:checked'))
+                .map(cb => parseInt(cb.value));
+            
+            const crossRefs = Array.from(document.querySelectorAll('#crossRefList input:checked'))
+                .map(cb => parseInt(cb.value));
+            
+            let imageData = null;
+            if (imageFile) {
+                imageData = await fileToBase64(imageFile);
+            } else if (editingIndex !== null) {
+                imageData = steps[currentPlatform][editingIndex].image;
+            }
+            
+            const stepData = {
+                title,
+                desc,
+                code,
+                notes,
+                category,
+                image: imageData,
+                prerequisites,
+                crossRefs,
+                completed: editingIndex !== null ? steps[currentPlatform][editingIndex].completed : false
+            };
+            
+            if (editingIndex !== null) {
+                steps[currentPlatform][editingIndex] = stepData;
+            } else {
+                steps[currentPlatform].push(stepData);
+            }
+            
+            renderSteps(currentPlatform);
+            updateProgress();
+            closeModal();
+            updateLastSaved();
+        }
+
+        function deleteStep(platform, idx) {
+            if (confirm('Delete this step?')) {
+                steps[platform].splice(idx, 1);
+                renderSteps(platform);
+                updateProgress();
+                updateLastSaved();
+            }
+        }
+
+        function moveStep(platform, idx, direction) {
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= steps[platform].length) return;
+            
+            [steps[platform][idx], steps[platform][newIdx]] = [steps[platform][newIdx], steps[platform][idx]];
+            renderSteps(platform);
+            updateLastSaved();
+        }
+
+        function toggleComplete(platform, idx) {
+            steps[platform][idx].completed = !steps[platform][idx].completed;
+            renderSteps(platform);
+            updateProgress();
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderSteps(platform) {
+            const container = document.getElementById('platform' + platform);
+            container.innerHTML = '';
+            
+            const categories = {};
+            steps[platform].forEach((step, idx) => {
+                if (!categories[step.category]) {
+                    categories[step.category] = [];
+                }
+                categories[step.category].push({ step, idx });
+            });
+            
+            Object.keys(categories).forEach(category => {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'category';
+                catDiv.innerHTML = `<div class="category-title">${category}</div>`;
+                
+                categories[category].forEach(({ step, idx }) => {
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = `step ${step.completed ? 'completed' : ''}`;
+                    stepDiv.id = `step-${platform}-${idx}`;
+                    
+                    let html = `
+                        <div class="step-header">
+                            <div class="step-num">STEP ${idx + 1}</div>
+                            <div class="step-actions">
+                                <button class="move-btn" onclick="moveStep('${platform}', ${idx}, -1)">↑</button>
+                                <button class="move-btn" onclick="moveStep('${platform}', ${idx}, 1)">↓</button>
+                                <button class="edit-btn" onclick="openModal('${platform}', ${idx})">✏️</button>
+                                <button class="delete-btn" onclick="deleteStep('${platform}', ${idx})">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="complete-${platform}-${idx}" ${step.completed ? 'checked' : ''} 
+                                   onchange="toggleComplete('${platform}', ${idx})">
+                            <label for="complete-${platform}-${idx}">Mark as completed</label>
+                        </div>
+                        <div class="step-content">
+                            <strong>${step.title}</strong><br>
+                            ${step.desc}
+                        </div>
+                    `;
+                    
+                    if (step.prerequisites && step.prerequisites.length > 0) {
+                        html += `<div class="prerequisites">📋 Prerequisites: ${step.prerequisites.map(p => `Step ${p + 1}`).join(', ')}</div>`;
+                    }
+                    
+                    if (step.image) {
+                        html += `<img src="${step.image}" class="step-image">`;
+                    }
+                    
+                    if (step.code) {
+                        html += `<div class="step-code">${escapeHtml(step.code)}</div>`;
+                    }
+                    
+                    if (step.notes) {
+                        html += `<div class="notes-warnings">⚠️ ${step.notes}</div>`;
+                    }
+                    
+                    if (step.crossRefs && step.crossRefs.length > 0) {
+                        const otherPlatform = platform === 'A' ? 'B' : 'A';
+                        step.crossRefs.forEach(refIdx => {
+                            const refStep = steps[otherPlatform][refIdx];
+                            if (refStep) {
+                                html += `<div class="cross-ref" onclick="scrollToStep('${otherPlatform}', ${refIdx})">🔗 See also in ${platformNames[otherPlatform]}: ${refStep.title}</div>`;
+                            }
+                        });
+                    }
+                    
+                    stepDiv.innerHTML = html;
+                    catDiv.appendChild(stepDiv);
+                });
+                
+                container.appendChild(catDiv);
+            });
+        }
+
+        function scrollToStep(platform, idx) {
+            const el = document.getElementById(`step-${platform}-${idx}`);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.style.background = '#fff3cd';
+                setTimeout(() => el.style.background = '', 1500);
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateLastSaved() {
+            const now = new Date().toLocaleString();
+            document.getElementById('lastSaved').textContent = now;
+        }
+
+        function saveVersion() {
+            versionHistory.push({
+                version: version,
+                date: new Date().toISOString(),
+                platformNames: JSON.parse(JSON.stringify(platformNames)),
+                steps: JSON.parse(JSON.stringify(steps))
+            });
+            
+            version++;
+            document.getElementById('versionNum').textContent = version;
+            updateLastSaved();
+            alert(`Version ${version - 1} saved!`);
+        }
+
+        function exportGuide() {
+            const data = {
+                platformNames,
+                steps,
+                version,
+                versionHistory,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `platform-guide-v${version}-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importGuide(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    
+                    if (data.platformNames) {
+                        platformNames.A = data.platformNames.A;
+                        platformNames.B = data.platformNames.B;
+                        document.getElementById('nameA').value = platformNames.A;
+                        document.getElementById('nameB').value = platformNames.B;
+                        updatePlatformName('A');
+                        updatePlatformName('B');
+                    }
+                    
+                    if (data.steps) {
+                        steps.A = data.steps.A || [];
+                        steps.B = data.steps.B || [];
+                        renderSteps('A');
+                        renderSteps('B');
+                    }
+                    
+                    if (data.version) {
+                        version = data.version;
+                        document.getElementById('versionNum').textContent = version;
+                    }
+                    
+                    if (data.versionHistory) {
+                        versionHistory.length = 0;
+                        versionHistory.push(...data.versionHistory);
+                    }
+                    
+                    updateProgress();
+                    updateLastSaved();
+                    alert('Guide imported successfully!');
+                } catch (err) {
+                    alert('Invalid file format');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Load from URL if shared
+        window.addEventListener('load', () => {
+            const params = new URLSearchParams(window.location.search);
+            const guideData = params.get('guide');
+            
+            if (guideData) {
+                try {
+                    const data = JSON.parse(atob(guideData));
+                    platformNames.A = data.platformNames.A;
+                    platformNames.B = data.platformNames.B;
+                    steps.A = data.steps.A || [];
+                    steps.B = data.steps.B || [];
+                    version = data.version || 1;
+                    
+                    document.getElementById('nameA').value = platformNames.A;
+                    document.getElementById('nameB').value = platformNames.B;
+                    updatePlatformName('A');
+                    updatePlatformName('B');
+                    renderSteps('A');
+                    renderSteps('B');
+                    updateProgress();
+                } catch (err) {
+                    console.error('Failed to load shared guide');
+                }
+            } else {
+                // Demo data
+                steps.A = [
+                    {
+                        title: 'Install SDK',
+                        desc: 'Download and install the platform SDK',
+                        category: 'Setup',
+                        code: 'npm install platform-a-sdk',
+                        notes: 'Requires Node.js 16+',
+                        prerequisites: [],
+                        crossRefs: [0],
+                        completed: false
+                    }
+                ];
+                steps.B = [
+                    {
+                        title: 'Setup Environment',
+                        desc: 'Configure your development environment',
+                        category: 'Setup',
+                        code: 'pip install platform-b-tools',
+                        notes: 'Python 3.8+ required',
+                        prerequisites: [],
+                        crossRefs: [0],
+                        completed: false
+                    }
+                ];
+                
+                renderSteps('A');
+                renderSteps('B');
+            }
+            
+            updateProgress();
+            updateLastSaved();
+        });
+    </script>
+</body>
+</html>
